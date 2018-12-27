@@ -32,6 +32,21 @@ router.get('/register', (req, res) => {
    });
 });
 
+router.post('/login', (req, res) => {
+   const email = req.body.email;
+   const password = req.body.password;
+
+   User.findOne({ email /*: email*/ }).then((user) => {
+      if (!user) {
+         return res.status(404).json({ email: 'This user does not exist' });
+      }
+      bcrypt.compare(password, user.password).then((isMatch) => {
+         if (isMatch) res.json({ msg: 'Success' });
+         else res.status(400).json({ password: 'Password is incorrect' });
+      });
+   });
+});
+
 router.get('/test', (req, res) => {
    res.json({ msg: 'this is the user route' });
 });
