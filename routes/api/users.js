@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/Users');
 const bcrypt = require('bcryptjs');
+const keys = require('../../config/keys');
 
 router.get('/register', (req, res) => {
    User.findOne({ email: req.body.email }).then((user) => {
