@@ -8,6 +8,25 @@ router.get('/test', (req, res) => {
    res.json({ msg: 'this is the tweet route' });
 });
 
+router.get('/', (req, res) => {
+   Tweet.find()
+      .sort({ date: -1 })
+      .then((tweets) => res.json(tweets))
+      .catch((err) => res.status(400).send(err));
+});
+
+router.get('/user/:userId', (req, res) => {
+   Tweet.find({ user: req.params.userId })
+      .then((tweets) => res.json(tweets))
+      .catch((err) => res.status(400).json(err));
+});
+
+router.get('/:id', (req, res) => {
+   Tweet.findById(req.params.id)
+      .then((tweet) => res.json(tweet))
+      .catch((err) => res.status(400).json(err));
+});
+
 router.post(
    '/',
    passport.authenticate('jwt', { session: false }),
@@ -23,7 +42,7 @@ router.post(
          text: req.body.text
       });
 
-      newTweet.save().then(tweet => res.json(tweet))
+      newTweet.save().then((tweet) => res.json(tweet));
    }
 );
 
