@@ -6,6 +6,7 @@ const db = require('./config/keys').mongoURI;
 const users = require('./routes/api/users');
 const tweets = require('./routes/api/tweets');
 const User = require('./models/Users');
+const passport = require('passport');
 
 app.use(bp.urlencoded({ extended: false }));
 app.use(bp.json());
@@ -18,15 +19,8 @@ mongoose
    .then(() => console.log('Connected to Mongo DB'))
    .catch((err) => console.log(`DB Error: ${err}`));
 
-app.get('/', (req, res) => {
-   const user = new User({
-      handle: 'jim',
-      email: 'jim@jim.com',
-      password: 'jimisgreat123'
-   });
-   user.save();
-   res.send('Hello a/A');
-});
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 app.use('/api/users', users);
 app.use('/api/tweets', tweets);
