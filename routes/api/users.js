@@ -4,8 +4,15 @@ const User = require('../../models/Users');
 const bcrypt = require('bcryptjs');
 const keys = require('../../config/keys');
 const jwt = require('jsonwebtoken');
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 
 router.get('/register', (req, res) => {
+   const { errors, isValid } = validateRegisterInput(req.body);
+   if (!isValid) {
+      return res.status(400).json(errors);
+   }
+
    User.findOne({ email: req.body.email }).then((user) => {
       if (user) {
          return res
@@ -35,6 +42,11 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+   const {errors, isValid} = validateLoginInput(req.body);
+   if(!isValid){
+      return res.status(400).json(errors);
+   }
+   
    const email = req.body.email;
    const password = req.body.password;
 
